@@ -1,3 +1,6 @@
+*.jar
+.idea/
+
 # Built application files
 *.apk
 *.ap_
