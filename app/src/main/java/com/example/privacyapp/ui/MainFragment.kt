@@ -10,7 +10,7 @@ import com.example.privacyapp.NetworkUsageService
 import com.example.privacyapp.R
 
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainFragment : Fragment(R.layout.fragment_main), View.OnClickListener {
 
     private lateinit var navController: NavController
 
@@ -32,5 +32,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
+    }
+
+    override fun onClick(v: View?) {
+        when (v!!.id) {
+            R.id.button -> {
+                button(v)
+            }
+        }
     }
 }

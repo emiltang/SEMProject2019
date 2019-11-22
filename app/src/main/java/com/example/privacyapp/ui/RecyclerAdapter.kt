@@ -9,22 +9,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.privacyapp.R
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class RecyclerAdapter(private val context: Context, private val list: List<ApplicationInfo>) :
-    RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+class RecyclerAdapter(
+    private val context: Context,
+    private val list: List<ApplicationInfo>,
+    private val onClickListener: MyOnItemClickListener
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(
-            view = LayoutInflater.from(
-                context
-            ).inflate(R.layout.list_item, parent, false)
-        )
+) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+
+    interface MyOnItemClickListener {
+        fun onItemClicked(model: ApplicationInfo)
+    }
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        fun bind(context: Context, model: ApplicationInfo, clickListener: MyOnItemClickListener) {
+            itemView.appIcon.setImageDrawable(model.loadIcon(context.packageManager))
+            itemView.appTitle.text = context.packageManager.getApplicationLabel(model)
+            itemView.setOnClickListener { clickListener.onItemClicked(model) }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false))
+    }
 
     override fun getItemCount() = list.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.appIcon.setImageDrawable(list[position].loadIcon(context.packageManager))
-        holder.itemView.appTitle.text = context.packageManager.getApplicationLabel(list[position])
+        holder.bind(context, list[position], onClickListener)
     }
+
 }
