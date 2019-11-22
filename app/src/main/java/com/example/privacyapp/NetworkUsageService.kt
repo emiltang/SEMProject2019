@@ -10,29 +10,38 @@ import android.os.RemoteException
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.app.JobIntentService
+import com.example.privacyapp.db.AppDatabase
+import com.example.privacyapp.model.NetworkActivityRecord
 
 
 @Suppress("DEPRECATION")
 class NetworkUsageService : JobIntentService() {
 
+    private lateinit var db: AppDatabase
     private lateinit var networkStatsManager: NetworkStatsManager
     private val tag = this::class.simpleName
 
-    override fun onHandleWork(intent: Intent) {
+    override fun onCreate() {
+        super.onCreate()
         networkStatsManager = applicationContext.getSystemService(Context.NETWORK_STATS_SERVICE) as NetworkStatsManager
+        db = AppDatabase(applicationContext)
+    }
+
+    override fun onHandleWork(intent: Intent) {
 
         val wifi = getNetworkStatsForWifi()
         val mobile = getNetworkStatsForMobile()
 
-        wifi.addAll(mobile)
+        db.networkActivityRecordDao().insertAll(wifi)
+        db.networkActivityRecordDao().insertAll(mobile)
 
-        val activityIntent = Intent(baseContext, ListActivity::class.java)
-        activityIntent.putParcelableArrayListExtra("data", wifi)
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // WTF Some how need only for android 6 >= and 9>=
-        startActivity(activityIntent)
+//        val activityIntent = Intent(baseContext, ListActivity::class.java)
+//        activityIntent.putParcelableArrayListExtra("data", wifi)
+//        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // WTF Some how need only for android 6 >= and 9>=
+//        startActivity(activityIntent)
     }
 
-    private fun getNetworkStatsForWifi(): ArrayList<NetworkActivityRecord> {
+    private fun getNetworkStatsForWifi(): List<NetworkActivityRecord> {
         val networkStats: NetworkStats?
         try {
             networkStats = networkStatsManager.queryDetails(
@@ -43,19 +52,19 @@ class NetworkUsageService : JobIntentService() {
             )
         } catch (ex: RemoteException) {
             Log.e(tag, "Network error", ex)
-            return arrayListOf()
+            return emptyList()
         }
         return unpackBuckets(networkStats = networkStats)
     }
 
-    private fun unpackBuckets(networkStats: NetworkStats): ArrayList<NetworkActivityRecord> {
+    private fun unpackBuckets(networkStats: NetworkStats): List<NetworkActivityRecord> {
         val records = ArrayList<NetworkActivityRecord>()
         val bucket = NetworkStats.Bucket()
         while (networkStats.hasNextBucket()) {
             networkStats.getNextBucket(bucket)
             records.add(
                 NetworkActivityRecord(
-                    uid = bucket.uid,
+                    appUid = bucket.uid,
                     data = bucket.rxBytes + bucket.txBytes
                 )
             )
@@ -64,7 +73,7 @@ class NetworkUsageService : JobIntentService() {
     }
 
     @SuppressLint("MissingPermission", "HardwareIds")
-    private fun getNetworkStatsForMobile(): ArrayList<NetworkActivityRecord> {
+    private fun getNetworkStatsForMobile(): List<NetworkActivityRecord> {
         val networkStats: NetworkStats?
         try {
             val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -76,7 +85,7 @@ class NetworkUsageService : JobIntentService() {
             )
         } catch (ex: RemoteException) {
             Log.e(tag, "Network error", ex)
-            return arrayListOf()
+            return emptyList()
         }
         return unpackBuckets(networkStats = networkStats)
     }
