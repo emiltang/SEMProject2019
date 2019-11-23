@@ -10,19 +10,21 @@ import com.example.privacyapp.R
 import kotlinx.android.synthetic.main.list_item.view.*
 
 
-class RecyclerAdapter(
+class AppListAdapter(
     private val context: Context,
     private val list: List<ApplicationInfo>,
-    private val onClickListener: MyOnItemClickListener
+    private val onClickListener: AppListItemClickListener
+) : RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
 
-) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-
-    interface MyOnItemClickListener {
+    /**
+     * List item callback interface
+     */
+    interface AppListItemClickListener {
         fun onItemClicked(model: ApplicationInfo)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(context: Context, model: ApplicationInfo, clickListener: MyOnItemClickListener) {
+        fun bind(context: Context, model: ApplicationInfo, clickListener: AppListItemClickListener) {
             itemView.appIcon.setImageDrawable(model.loadIcon(context.packageManager))
             itemView.appTitle.text = context.packageManager.getApplicationLabel(model)
             itemView.setOnClickListener { clickListener.onItemClicked(model) }
@@ -38,5 +40,4 @@ class RecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(context, list[position], onClickListener)
     }
-
 }

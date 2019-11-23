@@ -28,6 +28,12 @@
         app:layout_constraintStart_toEndOf="@+id/appIcon"
         app:layout_constraintTop_toTopOf="parent"
     />
+    <TextView
+        android:id="@+id/statsView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp" android:text="@string/textview"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/appIcon"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

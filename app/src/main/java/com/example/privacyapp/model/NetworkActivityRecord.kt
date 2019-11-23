@@ -12,6 +12,7 @@ data class NetworkActivityRecord(
     @ColumnInfo(name = "appUid") val appUid: Int,
     @ColumnInfo(name = "data") val data: Long
 ) : Parcelable {
+
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readInt(),
@@ -24,18 +25,10 @@ data class NetworkActivityRecord(
         parcel.writeLong(data)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<NetworkActivityRecord> {
-        override fun createFromParcel(parcel: Parcel): NetworkActivityRecord {
-            return NetworkActivityRecord(parcel)
-        }
-
-        override fun newArray(size: Int): Array<NetworkActivityRecord?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = NetworkActivityRecord(parcel)
+        override fun newArray(size: Int): Array<NetworkActivityRecord?> = arrayOfNulls(size)
     }
-
 }

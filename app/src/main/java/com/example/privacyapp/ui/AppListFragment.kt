@@ -1,6 +1,5 @@
 package com.example.privacyapp.ui
 
-
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.view.View
@@ -12,13 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
 import kotlinx.android.synthetic.main.activity_list_activity.*
 
-
-class AppListFragment : Fragment(R.layout.fragment_app_list), RecyclerAdapter.MyOnItemClickListener {
-
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-    }
+/**
+ * Display list of installed apps
+ */
+class AppListFragment : Fragment(R.layout.fragment_app_list), AppListAdapter.AppListItemClickListener {
 
     private lateinit var navController: NavController
 
@@ -27,11 +23,14 @@ class AppListFragment : Fragment(R.layout.fragment_app_list), RecyclerAdapter.My
         navController = findNavController()
         val apps = context!!.packageManager.getInstalledApplications(0)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = RecyclerAdapter(context!!, apps, this)
+        recyclerView.adapter = AppListAdapter(context!!, apps, this)
     }
 
-    override fun onItemClicked(model: ApplicationInfo) {
-
-        navController.navigate(R.id.action_appListFragment_to_networkUsageFragment, bundleOf("model" to model))
-    }
+    /**
+     * Activated on list item clicked
+     */
+    override fun onItemClicked(model: ApplicationInfo) = navController.navigate(
+        R.id.action_appListFragment_to_networkUsageFragment,
+        bundleOf("model" to model)
+    )
 }

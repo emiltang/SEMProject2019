@@ -7,11 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.RemoteException
+import android.os.ResultReceiver
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.app.JobIntentService
+import androidx.core.os.bundleOf
 import com.example.privacyapp.db.AppDatabase
-import com.example.privacyapp.model.NetworkActivityRecord
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Suppress("DEPRECATION")
@@ -29,19 +32,71 @@ class NetworkUsageService : JobIntentService() {
 
     override fun onHandleWork(intent: Intent) {
 
-        val wifi = getNetworkStatsForWifi()
-        val mobile = getNetworkStatsForMobile()
+        val uid = intent.getIntExtra("uid", -1)
 
-        db.networkActivityRecordDao().insertAll(wifi)
-        db.networkActivityRecordDao().insertAll(mobile)
+        if (uid == -1) return
 
-//        val activityIntent = Intent(baseContext, ListActivity::class.java)
-//        activityIntent.putParcelableArrayListExtra("data", wifi)
-//        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // WTF Some how need only for android 6 >= and 9>=
-//        startActivity(activityIntent)
+        val resultReceiver = intent.getParcelableExtra("resultReceiver") as ResultReceiver
+
+        val wifi = getNetworkStatsForUidWifi(uid)
+        val mobile = getNetworkStatsForUidMobile(uid)
+
+        //db.networkActivityRecordDao().insertAll(wifi)
+        //db.networkActivityRecordDao().insertAll(mobile)
+
+        resultReceiver.send(0, bundleOf("data" to wifi + mobile))
     }
 
-    private fun getNetworkStatsForWifi(): List<NetworkActivityRecord> {
+    private fun unpackBuckets(networkStats: NetworkStats): List<NetworkStats.Bucket> {
+        val records = ArrayList<NetworkStats.Bucket>()
+        while (networkStats.hasNextBucket()) {
+            val bucket = NetworkStats.Bucket()
+            networkStats.getNextBucket(bucket)
+            records.add(bucket)
+        }
+        return records
+    }
+
+    private fun getNetworkStatsForUidWifi(uid: Int): List<NetworkStats.Bucket> {
+        val networkStats: NetworkStats?
+        val tomorrow = Calendar.getInstance().also { it.add(Calendar.DATE, 1) }
+        try {
+            networkStats = networkStatsManager.queryDetailsForUid(
+                ConnectivityManager.TYPE_WIFI,
+                "",
+                0,
+                tomorrow.timeInMillis,
+                uid
+            )
+        } catch (ex: RemoteException) {
+            Log.e(tag, "Network error", ex)
+            return emptyList()
+        }
+        return unpackBuckets(networkStats = networkStats)
+    }
+
+    @SuppressLint("MissingPermission", "HardwareIds")
+    private fun getNetworkStatsForUidMobile(uid: Int): List<NetworkStats.Bucket> {
+        val networkStats: NetworkStats?
+        val tomorrow = Calendar.getInstance().also { it.add(Calendar.DATE, 1) }
+
+        try {
+            val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            networkStats = networkStatsManager.queryDetailsForUid(
+                ConnectivityManager.TYPE_MOBILE,
+                telephonyManager.subscriberId,
+                0,
+                tomorrow.timeInMillis,
+                uid
+            )
+        } catch (ex: RemoteException) {
+            Log.e(tag, "Network error", ex)
+            return emptyList()
+        }
+        return unpackBuckets(networkStats = networkStats)
+    }
+
+    private fun getNetworkStatsForWifi(): List<NetworkStats.Bucket> {
         val networkStats: NetworkStats?
         try {
             networkStats = networkStatsManager.queryDetails(
@@ -57,23 +112,8 @@ class NetworkUsageService : JobIntentService() {
         return unpackBuckets(networkStats = networkStats)
     }
 
-    private fun unpackBuckets(networkStats: NetworkStats): List<NetworkActivityRecord> {
-        val records = ArrayList<NetworkActivityRecord>()
-        val bucket = NetworkStats.Bucket()
-        while (networkStats.hasNextBucket()) {
-            networkStats.getNextBucket(bucket)
-            records.add(
-                NetworkActivityRecord(
-                    appUid = bucket.uid,
-                    data = bucket.rxBytes + bucket.txBytes
-                )
-            )
-        }
-        return records
-    }
-
     @SuppressLint("MissingPermission", "HardwareIds")
-    private fun getNetworkStatsForMobile(): List<NetworkActivityRecord> {
+    private fun getNetworkStatsForMobile(): List<NetworkStats.Bucket> {
         val networkStats: NetworkStats?
         try {
             val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
