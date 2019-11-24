@@ -3,6 +3,7 @@ package com.example.privacyapp.ui
 import android.app.usage.NetworkStats
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -29,21 +30,26 @@ class NetworkUsageFragment : Fragment(R.layout.fragment_network_usage), AppResul
         appTitle.text = context!!.packageManager.getApplicationLabel(application)
 
         // Start service to fetch netstats data and request callback
-        val intent = Intent(context!!, NetworkUsageService::class.java)
-        intent.putExtra("resultReceiver", AppResultReceiver(this))
-        intent.putExtra("uid", application.uid)
+        val intent = Intent(context!!, NetworkUsageService::class.java).apply {
+            putExtra("resultReceiver", AppResultReceiver(listener = this@NetworkUsageFragment))
+            putExtra("uid", application.uid)
+        }
         NetworkUsageService.enqueueWork(context!!, intent)
+
+        permissionView.text = ""
+        val perm = context!!.packageManager.getPackageInfo(application.packageName, PackageManager.GET_PERMISSIONS)
+        perm.requestedPermissions.forEach { permissionView.append("$it\n") }
     }
 
     override fun onReceiveResult(resultCode: Int, bundle: Bundle) {
         val list = bundle.get("data")
         if (list !is ArrayList<*>) return // smart cast
-        statsView.text = "" // clear textfield
+        networkStatsView.text = "" // clear textfield
         for (item in list) {
             if (item !is NetworkStats.Bucket) continue // smart cast
             /* Convert unix time to human readable format */
             val time = LocalDateTime.ofInstant(Instant.ofEpochMilli(item.endTimeStamp), ZoneId.systemDefault())
-            statsView.append("$time ${item.rxPackets} ${item.txPackets}\n")
+            networkStatsView.append("$time ${item.rxPackets} ${item.txPackets}\n")
         }
     }
 }

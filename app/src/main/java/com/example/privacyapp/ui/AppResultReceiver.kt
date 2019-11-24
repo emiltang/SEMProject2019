@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.ResultReceiver
 
-class AppResultReceiver(private val appReceiver: AppReceiver) : ResultReceiver(Handler()) {
+class AppResultReceiver(private val listener: AppReceiver) : ResultReceiver(Handler()) {
 
     interface AppReceiver {
         fun onReceiveResult(resultCode: Int, bundle: Bundle)
     }
 
     override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-        appReceiver.onReceiveResult(resultCode, resultData!!)
+        listener.onReceiveResult(resultCode, resultData!!)
     }
 }
