@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.list_item.view.*
 class AppListAdapter(
     private val context: Context,
     private val list: List<ApplicationInfo>,
-    private val onClickListener: AppListItemClickListener
+    private val listener: AppListItemClickListener
 ) : RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
 
     /**
@@ -23,7 +23,7 @@ class AppListAdapter(
         fun onItemClicked(model: ApplicationInfo)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(context: Context, model: ApplicationInfo, clickListener: AppListItemClickListener) {
             itemView.appIcon.setImageDrawable(model.loadIcon(context.packageManager))
             itemView.appTitle.text = context.packageManager.getApplicationLabel(model)
@@ -38,6 +38,6 @@ class AppListAdapter(
     override fun getItemCount() = list.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(context, list[position], onClickListener)
+        holder.bind(context, list[position], listener)
     }
 }
