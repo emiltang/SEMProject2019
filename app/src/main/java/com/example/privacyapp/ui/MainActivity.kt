@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.privacyapp.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,11 +33,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         askPermission()
-
         /* Setup toolbar and drawer */
         val navController = findNavController(R.id.nav_host_fragment)
-        val appBarConfiguration = AppBarConfiguration(navController.graph, drawer_layout)
-        toolbar.setupWithNavController(navController, appBarConfiguration)
+
+        toolbar.setupWithNavController(navController, drawer_layout)
         nav_view.setupWithNavController(navController)
+
     }
 }
