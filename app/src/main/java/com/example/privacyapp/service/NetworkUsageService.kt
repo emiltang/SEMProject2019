@@ -16,7 +16,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-@Suppress("DEPRECATION")
 class NetworkUsageService : JobIntentService() {
 
     private lateinit var networkStatsManager: NetworkStatsManager
