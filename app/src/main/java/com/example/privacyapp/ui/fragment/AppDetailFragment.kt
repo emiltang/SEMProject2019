@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
+import com.example.privacyapp.ui.NetworkViewAdapter
 import com.example.privacyapp.ui.viewmodel.AppViewModel
 import kotlinx.android.synthetic.main.fragment_app_detail.*
 
@@ -27,6 +28,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
 
     private lateinit var application: ApplicationInfo
     private lateinit var navController: NavController
+    private lateinit var adapter: NetworkViewAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,19 +43,16 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
                 list.filter { it.app == application.packageName.toString() }
                     .forEach { warningLabel.text = it.description }
             })
-        //viewModel.netData.observe(this, Observer { networkStatsView.append("$it") })
 
         appIcon.setImageDrawable(application.loadIcon(context!!.packageManager))
         appTitle.text = context!!.packageManager.getApplicationLabel(application)
         permissionButton.setOnClickListener(this)
         openPermSettingsButton.setOnClickListener(this)
 
-
         recyclerView.layoutManager = LinearLayoutManager(this.context)
-//        val adapter= NetworkViewAdapter()
-//        recyclerView.adapter = adapter
-        viewModel.netData.observe(this, Observer { recyclerView.adapter = NetworkViewAdapter(it) })
+        adapter = NetworkViewAdapter(context!!).also { recyclerView.adapter = it }
 
+        viewModel.netData.observe(this, Observer { adapter.list = it })
     }
 
     override fun onClick(v: View?) = when (v!!.id) {

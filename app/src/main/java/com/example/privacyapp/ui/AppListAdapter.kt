@@ -31,13 +31,11 @@ class AppListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(view = LayoutInflater.from(context).inflate(R.layout.app_list_item, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        view = LayoutInflater.from(context).inflate(R.layout.app_list_item, parent, false)
+    )
 
     override fun getItemCount() = list.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(context, list[position], listener)
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(context, list[position], listener)
 }
