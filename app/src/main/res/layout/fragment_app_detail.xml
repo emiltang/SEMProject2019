@@ -8,6 +8,7 @@
     tools:context=".ui.fragment.AppDetailFragment"
 >
     <TextView
+        android:text=""
         android:id="@+id/warningLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.privacyapp.R
-import kotlinx.android.synthetic.main.fragment_permission.view.*
+import kotlinx.android.synthetic.main.permission_list_item.view.*
 
 class PermissionViewAdapter(
     private val context: Context,
@@ -23,7 +23,7 @@ class PermissionViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.fragment_permission, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.permission_list_item, parent, false)
     )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

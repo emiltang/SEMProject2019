@@ -5,15 +5,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.privacyapp.model.Warning
+import com.example.privacyapp.model.PrivacyWarning
 
 /**
  * Database abstraction
  */
-@Database(entities = [Warning::class], version = 1)
+@Database(entities = [PrivacyWarning::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun warningDao(): WarningDao
+    abstract fun privacyWarningDao(): PrivacyWarningDao
 
     companion object {
 

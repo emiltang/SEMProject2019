@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
 import com.example.privacyapp.ui.PermissionViewAdapter
-import kotlinx.android.synthetic.main.fragment_permission_list.*
+import kotlinx.android.synthetic.main.fragment_permission.*
 
 
-class PermissionFragment : Fragment(R.layout.fragment_permission_list),
+class PermissionFragment : Fragment(R.layout.fragment_permission),
     PermissionViewAdapter.OnListFragmentInteractionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

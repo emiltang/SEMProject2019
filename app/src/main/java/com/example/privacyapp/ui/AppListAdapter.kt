@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.privacyapp.R
-import kotlinx.android.synthetic.main.list_item.view.*
+import kotlinx.android.synthetic.main.app_list_item.view.*
 
 
 class AppListAdapter(
@@ -32,7 +32,7 @@ class AppListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false))
+        return ViewHolder(view = LayoutInflater.from(context).inflate(R.layout.app_list_item, parent, false))
     }
 
     override fun getItemCount() = list.size
