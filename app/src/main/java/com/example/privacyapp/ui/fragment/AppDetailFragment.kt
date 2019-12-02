@@ -1,6 +1,5 @@
 package com.example.privacyapp.ui.fragment
 
-import android.app.usage.NetworkStats
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.net.Uri
@@ -13,17 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
-import com.example.privacyapp.ui.AppResultReceiver
 import com.example.privacyapp.ui.viewmodel.AppViewModel
 import kotlinx.android.synthetic.main.fragment_app_detail.*
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
-class AppDetailFragment : Fragment(R.layout.fragment_app_detail),
-    AppResultReceiver.AppReceiver,
-    View.OnClickListener {
+class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickListener {
+
 
     private val viewModel: AppViewModel by lazy {
         val factory = AppViewModel.NetworkStatsViewModelFactory(this.activity!!.application, application)
@@ -46,25 +41,19 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail),
                 list.filter { it.app == application.packageName.toString() }
                     .forEach { warningLabel.text = it.description }
             })
-        viewModel.netData.observe(this, Observer { networkStatsView.append("$it") })
+        //viewModel.netData.observe(this, Observer { networkStatsView.append("$it") })
 
         appIcon.setImageDrawable(application.loadIcon(context!!.packageManager))
         appTitle.text = context!!.packageManager.getApplicationLabel(application)
         permissionButton.setOnClickListener(this)
         openPermSettingsButton.setOnClickListener(this)
 
-    }
 
-    override fun onReceiveResult(resultCode: Int, bundle: Bundle) {
-        val list = bundle.get("data")
-        if (list !is ArrayList<*>) return // smart cast
-        networkStatsView.text = "" // clear textfield
-        for (item in list) {
-            if (item !is NetworkStats.Bucket) continue // smart cast
-            /* Convert unix time to human readable format */
-            val time = LocalDateTime.ofInstant(Instant.ofEpochMilli(item.endTimeStamp), ZoneId.systemDefault())
-            networkStatsView.append("$time ${item.rxPackets} ${item.txPackets}\n")
-        }
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+//        val adapter= NetworkViewAdapter()
+//        recyclerView.adapter = adapter
+        viewModel.netData.observe(this, Observer { recyclerView.adapter = NetworkViewAdapter(it) })
+
     }
 
     override fun onClick(v: View?) = when (v!!.id) {
