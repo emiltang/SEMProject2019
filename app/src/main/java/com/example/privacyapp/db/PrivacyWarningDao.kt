@@ -9,6 +9,7 @@ import com.example.privacyapp.model.PrivacyWarning
 
 @Dao
 interface PrivacyWarningDao {
+
     @Insert
     fun insertAll(vararg records: PrivacyWarning)
 

@@ -28,9 +28,7 @@ class MainFragment : Fragment(R.layout.fragment_main), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.button -> {
-                button(v)
-            }
+            R.id.button -> button(v)
         }
     }
 }

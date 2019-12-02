@@ -15,8 +15,7 @@ import kotlinx.android.synthetic.main.activity_list_activity.*
 /**
  * Display list of installed apps
  */
-class AppListFragment : Fragment(R.layout.fragment_app_list),
-    AppListAdapter.AppListItemClickListener {
+class AppListFragment : Fragment(R.layout.fragment_app_list), AppListAdapter.AppListItemClickListener {
 
     private lateinit var navController: NavController
 
@@ -25,8 +24,7 @@ class AppListFragment : Fragment(R.layout.fragment_app_list),
         navController = findNavController()
         val apps = context!!.packageManager.getInstalledApplications(0)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter =
-            AppListAdapter(context!!, apps, this)
+        recyclerView.adapter = AppListAdapter(context!!, apps, this)
     }
 
     /**

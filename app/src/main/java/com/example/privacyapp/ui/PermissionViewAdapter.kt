@@ -26,14 +26,12 @@ class PermissionViewAdapter(
         LayoutInflater.from(parent.context).inflate(R.layout.permission_list_item, parent, false)
     )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(permissions[position], listener)
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(permissions[position], listener)
 
-    override fun getItemCount(): Int = permissions.size
+    override fun getItemCount() = permissions.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(model: String, lister: OnListFragmentInteractionListener) {
+        fun bind(model: String, listener: OnListFragmentInteractionListener) {
             val status = context.packageManager.checkPermission(model, application.packageName)
             itemView.status.text = when (status) {
                 PackageManager.PERMISSION_GRANTED -> "Granted"
@@ -41,7 +39,7 @@ class PermissionViewAdapter(
                 else -> "Error"
             }
             itemView.permission.text = model
-            itemView.setOnClickListener { lister.onItemClicked(model) }
+            itemView.setOnClickListener { listener.onItemClicked(model) }
         }
     }
 }
