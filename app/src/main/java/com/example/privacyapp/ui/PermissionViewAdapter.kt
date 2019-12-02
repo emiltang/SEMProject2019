@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.privacyapp.R
 import kotlinx.android.synthetic.main.fragment_permission.view.*
 
-class MyPermissionRecyclerViewAdapter(
+class PermissionViewAdapter(
     private val context: Context,
     private val application: ApplicationInfo,
     private val permissions: Array<String>,
     private val listener: OnListFragmentInteractionListener
-) : RecyclerView.Adapter<MyPermissionRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<PermissionViewAdapter.ViewHolder>() {
 
     interface OnListFragmentInteractionListener {
         fun onItemClicked(item: String)

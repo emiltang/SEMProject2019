@@ -1,4 +1,4 @@
-package com.example.privacyapp.ui
+package com.example.privacyapp.ui.fragment
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -8,11 +8,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
+import com.example.privacyapp.ui.PermissionViewAdapter
 import kotlinx.android.synthetic.main.fragment_permission_list.*
 
 
 class PermissionFragment : Fragment(R.layout.fragment_permission_list),
-    MyPermissionRecyclerViewAdapter.OnListFragmentInteractionListener {
+    PermissionViewAdapter.OnListFragmentInteractionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -21,7 +22,7 @@ class PermissionFragment : Fragment(R.layout.fragment_permission_list),
         val perm = context!!.packageManager.getPackageInfo(application!!.packageName, PackageManager.GET_PERMISSIONS)
 
         list.layoutManager = LinearLayoutManager(context)
-        list.adapter = MyPermissionRecyclerViewAdapter(
+        list.adapter = PermissionViewAdapter(
             context = context!!,
             application = application,
             permissions = perm.requestedPermissions,

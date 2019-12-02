@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:name=".PrivacyApp"
+        tools:ignore="GoogleAppIndexingWarning"
+    >
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -26,7 +28,7 @@
         </activity>
 
         <service
-            android:name=".NetworkUsageService"
+            android:name=".service.NetworkUsageService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>

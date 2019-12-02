@@ -1,4 +1,4 @@
-package com.example.privacyapp.ui
+package com.example.privacyapp.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.privacyapp.NetworkUsageService
 import com.example.privacyapp.R
+import com.example.privacyapp.service.NetworkUsageService
 
 class MainFragment : Fragment(R.layout.fragment_main), View.OnClickListener {
 

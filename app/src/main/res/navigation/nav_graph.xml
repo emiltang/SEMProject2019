@@ -3,18 +3,18 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph"
             app:startDestination="@id/appListFragment">
-    <fragment android:id="@+id/mainFragment" android:name="com.example.privacyapp.ui.MainFragment"
+    <fragment android:id="@+id/mainFragment" android:name="com.example.privacyapp.ui.fragment.MainFragment"
               android:label="fragment_main" tools:layout="@layout/fragment_main"/>
-    <fragment android:id="@+id/appListFragment" android:name="com.example.privacyapp.ui.AppListFragment"
+    <fragment android:id="@+id/appListFragment" android:name="com.example.privacyapp.ui.fragment.AppListFragment"
               android:label="fragment_app_list" tools:layout="@layout/fragment_app_list">
         <action android:id="@+id/action_appListFragment_to_networkUsageFragment"
                 app:destination="@id/networkUsageFragment"/>
     </fragment>
-    <fragment android:id="@+id/networkUsageFragment" android:name="com.example.privacyapp.ui.NetworkUsageFragment"
-              android:label="fragment_network_usage" tools:layout="@layout/fragment_network_usage">
+    <fragment android:id="@+id/networkUsageFragment" android:name="com.example.privacyapp.ui.fragment.AppDetailFragment"
+              android:label="fragment_network_usage" tools:layout="@layout/fragment_app_detail">
         <action android:id="@+id/action_networkUsageFragment_to_permissionFragment"
                 app:destination="@id/permissionFragment"/>
     </fragment>
-    <fragment android:id="@+id/permissionFragment" android:name="com.example.privacyapp.ui.PermissionFragment"
+    <fragment android:id="@+id/permissionFragment" android:name="com.example.privacyapp.ui.fragment.PermissionFragment"
               android:label="fragment_permission_list" tools:layout="@layout/fragment_permission_list"/>
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.privacyapp
+package com.example.privacyapp.service
 
 import android.app.usage.NetworkStats
 import android.app.usage.NetworkStatsManager
@@ -28,7 +28,10 @@ class NetworkUsageService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        val uid = intent.getIntExtra("uid", NO_UID)
+        val uid = intent.getIntExtra(
+            "uid",
+            NO_UID
+        )
         if (uid == NO_UID) return
 
         val wifi = getNetworkStatsForUidWifi(uid)
@@ -104,7 +107,10 @@ class NetworkUsageService : JobIntentService() {
         private const val JOB_ID = 100
 
         fun enqueueWork(context: Context, intent: Intent) {
-            enqueueWork(context, NetworkUsageService::class.java, JOB_ID, intent)
+            enqueueWork(
+                context, NetworkUsageService::class.java,
+                JOB_ID, intent
+            )
         }
     }
 }
