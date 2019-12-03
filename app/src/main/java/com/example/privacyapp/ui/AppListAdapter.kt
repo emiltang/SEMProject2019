@@ -26,7 +26,7 @@ class AppListAdapter(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(context: Context, model: ApplicationInfo, clickListener: AppListItemClickListener) {
             itemView.appIcon.setImageDrawable(model.loadIcon(context.packageManager))
-            itemView.appTitle.text = context.packageManager.getApplicationLabel(model)
+            itemView.description.text = context.packageManager.getApplicationLabel(model)
             itemView.setOnClickListener { clickListener.onItemClicked(model) }
         }
     }

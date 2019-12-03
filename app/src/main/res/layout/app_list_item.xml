@@ -6,11 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:padding="8dp"
     tools:ignore="UseCompoundDrawables"
 >
 
     <ImageView
+        android:layout_margin="8dp"
         android:id="@+id/appIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -19,7 +20,8 @@
     />
 
     <TextView
-        android:id="@+id/appTitle"
+        android:id="@+id/description"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/textview"

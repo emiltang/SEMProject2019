@@ -17,4 +17,7 @@
     </fragment>
     <fragment android:id="@+id/permissionFragment" android:name="com.example.privacyapp.ui.fragment.PermissionFragment"
               android:label="fragment_permission_list" tools:layout="@layout/fragment_permission"/>
+    <fragment android:id="@+id/createWarningFragment"
+              android:name="com.example.privacyapp.ui.fragment.CreateWarningFragment"
+              android:label="fragment_create_warning" tools:layout="@layout/fragment_create_warning"/>
 </navigation>

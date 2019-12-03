@@ -21,7 +21,7 @@ class NetworkViewAdapter(val context: Context) :
     var list: List<NetworkActivityRecord>
         get() = _list // return _list
         set(value) {
-            _list = value
+            _list = value.reversed()
             notifyDataSetChanged()
         }
 
@@ -35,7 +35,7 @@ class NetworkViewAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = _list[position]
-        val date = DateUtils.formatDateRange(context, item.startTime, item.endTime, DateUtils.FORMAT_SHOW_TIME)
+        val date = DateUtils.getRelativeTimeSpanString(item.endTime)
         holder.itemView.time.text = "Date: $date"
         holder.itemView.downBytes.text = "Download: ${item.downBytes} Bytes"
         holder.itemView.upBytes.text = "Upload: ${item.upBytes} Bytes"

@@ -45,7 +45,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
             })
 
         appIcon.setImageDrawable(application.loadIcon(context!!.packageManager))
-        appTitle.text = context!!.packageManager.getApplicationLabel(application)
+        description.text = context!!.packageManager.getApplicationLabel(application)
         permissionButton.setOnClickListener(this)
         openPermSettingsButton.setOnClickListener(this)
 
