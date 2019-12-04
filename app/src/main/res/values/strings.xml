@@ -14,4 +14,9 @@
     <string name="view_permission">View Permission</string>
     <string name="open_settings">open settings</string>
     <string name="date">Date</string>
+    <string name="permission">Permission</string>
+    <string name="app_title">App title</string>
+    <string name="app_title_hint">App Title</string>
+    <string name="description">Description</string>
+    <string name="send">send</string>
 </resources>
