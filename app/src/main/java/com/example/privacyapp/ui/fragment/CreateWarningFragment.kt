@@ -1,6 +1,7 @@
 package com.example.privacyapp.ui.fragment
 
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -15,9 +16,9 @@ import kotlinx.android.synthetic.main.fragment_create_warning.*
 
 class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    lateinit var workManager: WorkManager
+    private lateinit var workManager: WorkManager
 
-    private val list = mutableListOf<String>()
+    private val appNamesList = mutableListOf<String>()
     private var apps = emptyList<ApplicationInfo>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,10 +30,9 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     }
 
     private fun handleSendButton(view: View) {
-
         val data = Data.Builder()
             .putString("app", appTitleSpinner.selectedItem.toString())
-            .putString("permission", permission.text.toString())
+            .putString("permission", appPermissionSpinner.selectedItem.toString())
             .putString("description", description.text.toString())
             .build()
         val request = OneTimeWorkRequest.Builder(UploadWorker::class.java).setInputData(data).build()
@@ -48,11 +48,11 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     private fun loadApplicationInfoToSpinner () {
         apps = context!!.packageManager.getInstalledApplications(0)
         apps.forEach{
-            list.add(context!!.packageManager.getApplicationLabel(it).toString())
+            appNamesList.add(context!!.packageManager.getApplicationLabel(it).toString())
         }
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, list)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        appTitleSpinner.adapter = adapter
+        val adapterApps = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, appNamesList)
+        adapterApps.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        appTitleSpinner.adapter = adapterApps
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -60,6 +60,19 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        println("The selected item is: " + list[position] + " is it the same " + appTitleSpinner.selectedItem.toString())
+        setAppPermissionSpinner(position)
     }
+
+    private fun setAppPermissionSpinner(position: Int) {
+        val perm = context!!.packageManager.getPackageInfo(
+            apps[position].packageName,
+            PackageManager.GET_PERMISSIONS
+        )
+        val permissionList = perm.requestedPermissions ?: emptyArray()
+        val adapterPerm =
+            ArrayAdapter(context!!, android.R.layout.simple_list_item_1, permissionList)
+        adapterPerm.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        appPermissionSpinner.adapter = adapterPerm
+    }
+
 }
