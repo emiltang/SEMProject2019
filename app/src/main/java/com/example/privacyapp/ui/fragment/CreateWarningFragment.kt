@@ -14,11 +14,12 @@ import com.example.privacyapp.R
 import com.example.privacyapp.service.UploadWorker
 import kotlinx.android.synthetic.main.fragment_create_warning.*
 
-class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), AdapterView.OnItemSelectedListener, View.OnClickListener {
+class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), AdapterView.OnItemSelectedListener,
+    View.OnClickListener {
 
     private lateinit var workManager: WorkManager
 
-    private val appNamesList = mutableListOf<String>()
+    private var appNamesList = emptyList<String>()
     private var apps = emptyList<ApplicationInfo>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,17 +46,15 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         }
     }
 
-    private fun loadApplicationInfoToSpinner () {
-        apps = context!!.packageManager.getInstalledApplications(0)
-        apps.forEach{
-            appNamesList.add(context!!.packageManager.getApplicationLabel(it).toString())
-        }
-        val adapterApps = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, appNamesList)
-        adapterApps.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        appTitleSpinner.adapter = adapterApps
+    private fun loadApplicationInfoToSpinner() {
+        val apps = context!!.packageManager.getInstalledApplications(0)
+        appNamesList = apps.map { context!!.packageManager.getApplicationLabel(it).toString() }
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, appNamesList)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        appTitleSpinner.adapter = adapter
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
+    override fun onNothingSelected(parent: AdapterView<*>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

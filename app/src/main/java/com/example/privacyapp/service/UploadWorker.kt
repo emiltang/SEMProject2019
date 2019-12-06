@@ -39,10 +39,10 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
             launch(Dispatchers.IO) {
                 http.newCall(request = request).execute().use { Log.d(tag, "Network Error") }
             }
-            Result.success()
+            return@coroutineScope Result.success()
         } catch (ex: Exception) {
             Log.d(tag, "Error detected", ex)
-            Result.failure()
+            return@coroutineScope Result.failure()
         }
     }
 
