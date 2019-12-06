@@ -25,6 +25,7 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appTitleSpinner.onItemSelectedListener = this
+        appPermissionSpinner.onItemSelectedListener = this
         sendButton.setOnClickListener(this)
         workManager = WorkManager.getInstance(context!!)
         loadApplicationInfoToSpinner()
@@ -58,8 +59,18 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        setAppPermissionSpinner(position)
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) =
+        when (parent!!.id) {
+            R.id.appTitleSpinner -> {
+                setAppPermissionSpinner(position)
+                println("item selected app")
+            }
+            R.id.appPermissionSpinner -> {
+                println("item selected permission")
+            }
+            else -> {
+
+            }
     }
 
     private fun setAppPermissionSpinner(position: Int) {
@@ -73,5 +84,4 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         adapterPerm.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         appPermissionSpinner.adapter = adapterPerm
     }
-
 }
