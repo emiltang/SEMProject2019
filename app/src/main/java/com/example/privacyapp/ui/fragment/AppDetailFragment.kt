@@ -58,9 +58,10 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
     override fun onClick(v: View?) = when (v!!.id) {
         R.id.openPermSettingsButton -> {
             val myAppSettings = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse(application.packageName))
-            myAppSettings.addCategory(Intent.CATEGORY_DEFAULT)
-            myAppSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivityForResult(myAppSettings, 0)
+            startActivity(myAppSettings.apply {
+                action = ACTION_APPLICATION_DETAILS_SETTINGS
+                data = Uri.fromParts("package", application.packageName, null)
+            })
         }
         R.id.permissionButton -> navController.navigate(
             R.id.action_networkUsageFragment_to_permissionFragment,
