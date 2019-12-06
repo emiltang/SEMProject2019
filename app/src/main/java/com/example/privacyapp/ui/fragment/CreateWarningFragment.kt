@@ -47,7 +47,7 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     }
 
     private fun loadApplicationInfoToSpinner() {
-        val apps = context!!.packageManager.getInstalledApplications(0)
+        apps = context!!.packageManager.getInstalledApplications(0)
         appNamesList = apps.map { context!!.packageManager.getApplicationLabel(it).toString() }
         val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, appNamesList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
