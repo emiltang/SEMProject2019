@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.CreateWarningFragment">
+    tools:context=".ui.fragment.CreateWarningFragment"
+>
 
     <Spinner
         android:id="@+id/appTitleSpinner"
@@ -17,7 +19,8 @@
         android:text="Application name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+    />
 
     <Spinner
         android:id="@+id/appPermissionSpinner"
@@ -29,7 +32,8 @@
         android:text="Permissions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appTitleSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/appTitleSpinner"
+    />
 
     <EditText
         android:id="@+id/description"
@@ -42,7 +46,8 @@
         android:text="@string/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appPermissionSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/appPermissionSpinner"
+    />
 
     <Button
         android:id="@+id/sendButton"
@@ -52,6 +57,18 @@
         android:layout_marginEnd="8dp"
         android:text="@string/send"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/description"
+    />
+
+    <Button
+        android:id="@+id/syncButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Sync"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendButton"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

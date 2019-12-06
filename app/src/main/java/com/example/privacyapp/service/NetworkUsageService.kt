@@ -15,7 +15,6 @@ import com.example.privacyapp.model.NetworkActivityRecord
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class NetworkUsageService : JobIntentService() {
 
     private lateinit var networkStatsManager: NetworkStatsManager

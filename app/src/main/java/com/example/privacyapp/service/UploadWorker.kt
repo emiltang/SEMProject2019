@@ -7,9 +7,7 @@ import androidx.work.WorkerParameters
 import com.example.privacyapp.model.PrivacyWarning
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +19,7 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
     private val http = OkHttpClient()
     private val objectMapper = ObjectMapper()
 
-    override suspend fun doWork() = coroutineScope {
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
 
             val warning = PrivacyWarning(
@@ -29,20 +27,25 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
                 permission = inputData.getString("permission")!!,
                 description = inputData.getString("description")!!
             )
-            val json = async(Dispatchers.IO) {
-                objectMapper.writeValueAsString(warning).toRequestBody(JSON.toMediaType())
-            }
+            val json = objectMapper.writeValueAsString(warning).toRequestBody(JSON.toMediaType())
+
             val request = Request.Builder()
                 .url(URL)
-                .post(json.await())
+                .post(json)
                 .build()
-            launch(Dispatchers.IO) {
-                http.newCall(request = request).execute().use { Log.d(tag, "Network Error") }
+
+            val result = http.newCall(request = request).execute().use { it }
+
+            if (result.isSuccessful) {
+                return@withContext Result.success()
+            } else {
+                Log.e(tag, "body: ${result.body!!.string()} msg: ${result.message} code: ${result.code}")
+                return@withContext Result.failure()
             }
-            return@coroutineScope Result.success()
+
         } catch (ex: Exception) {
-            Log.d(tag, "Error detected", ex)
-            return@coroutineScope Result.failure()
+            Log.e(tag, "Error detected", ex)
+            return@withContext Result.failure()
         }
     }
 

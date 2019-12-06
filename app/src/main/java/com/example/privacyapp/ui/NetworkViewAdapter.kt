@@ -10,7 +10,6 @@ import com.example.privacyapp.R
 import com.example.privacyapp.model.NetworkActivityRecord
 import kotlinx.android.synthetic.main.network_list_item.view.*
 
-
 class NetworkViewAdapter(val context: Context) :
     RecyclerView.Adapter<NetworkViewAdapter.ViewHolder>() {
 

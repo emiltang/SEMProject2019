@@ -1,6 +1,5 @@
 package com.example.privacyapp.ui
 
-
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager

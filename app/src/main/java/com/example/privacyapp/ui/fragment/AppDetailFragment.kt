@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.fragment_app_detail.*
 
 class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickListener {
 
-
     private val viewModel: AppViewModel by lazy {
         val factory = AppViewModel.NetworkStatsViewModelFactory(this.activity!!.application, application)
         return@lazy ViewModelProviders.of(this, factory)[AppViewModel::class.java]
@@ -37,12 +36,9 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
 
         application = arguments!!.getParcelable("model") ?: return
 
-        viewModel.warnings.observe(
-            this,
-            Observer { list ->
-                list.filter { it.app == application.packageName.toString() }
-                    .forEach { warningLabel.text = it.description }
-            })
+        viewModel.warnings.observe(this, Observer { list ->
+            list.filter { it.app == application.packageName.toString() }.forEach { warningLabel.append(it.description) }
+        })
 
         appIcon.setImageDrawable(application.loadIcon(context!!.packageManager))
         description.text = context!!.packageManager.getApplicationLabel(application)
@@ -51,7 +47,6 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         adapter = NetworkViewAdapter(context!!).also { recyclerView.adapter = it }
-
         viewModel.netData.observe(this, Observer { adapter.list = it })
     }
 
@@ -67,11 +62,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
             R.id.action_networkUsageFragment_to_permissionFragment,
             bundleOf("application" to application)
         )
-        else -> {
-        }
+        else -> Unit
+
     }
 }
-
-
-
-

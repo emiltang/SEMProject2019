@@ -18,9 +18,7 @@ class AppViewModel(
 
     val netData: MutableLiveData<List<NetworkActivityRecord>> get() = _netData
 
-    val warnings: LiveData<List<PrivacyWarning>> by lazy {
-        AppDatabase(this.getApplication()).privacyWarningDao().getAll()
-    }
+    val warnings: LiveData<List<PrivacyWarning>> = AppDatabase(this.getApplication()).privacyWarningDao().getAll()
 
     private val _netData: MutableLiveData<List<NetworkActivityRecord>> by lazy {
         MutableLiveData<List<NetworkActivityRecord>>().also {
@@ -54,4 +52,3 @@ class AppViewModel(
         ) as T
     }
 }
-

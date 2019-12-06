@@ -11,7 +11,6 @@ import com.example.privacyapp.R
 import com.example.privacyapp.ui.PermissionViewAdapter
 import kotlinx.android.synthetic.main.fragment_permission.*
 
-
 class PermissionFragment : Fragment(R.layout.fragment_permission),
     PermissionViewAdapter.OnListFragmentInteractionListener {
 

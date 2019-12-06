@@ -11,6 +11,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.privacyapp.R
+import com.example.privacyapp.service.SyncWorker
 import com.example.privacyapp.service.UploadWorker
 import kotlinx.android.synthetic.main.fragment_create_warning.*
 
@@ -19,6 +20,8 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
 
     private lateinit var workManager: WorkManager
 
+    private var selectedApp: ApplicationInfo? = null
+
     private var appNamesList = emptyList<String>()
     private var apps = emptyList<ApplicationInfo>()
 
@@ -26,13 +29,14 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         super.onViewCreated(view, savedInstanceState)
         appTitleSpinner.onItemSelectedListener = this
         sendButton.setOnClickListener(this)
+        syncButton.setOnClickListener(this)
         workManager = WorkManager.getInstance(context!!)
         loadApplicationInfoToSpinner()
     }
 
-    private fun handleSendButton(view: View) {
+    private fun startUploadWorker() {
         val data = Data.Builder()
-            .putString("app", appTitleSpinner.selectedItem.toString())
+            .putString("app", selectedApp!!.packageName)
             .putString("permission", appPermissionSpinner.selectedItem.toString())
             .putString("description", description.text.toString())
             .build()
@@ -42,8 +46,14 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.sendButton -> handleSendButton(view)
+            R.id.sendButton -> startUploadWorker()
+            R.id.syncButton -> startSyncWorker()
         }
+    }
+
+    private fun startSyncWorker() {
+        val request = OneTimeWorkRequest.from(SyncWorker::class.java)
+        workManager.enqueue(request)
     }
 
     private fun loadApplicationInfoToSpinner() {
@@ -59,6 +69,7 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        selectedApp = apps[position]
         setAppPermissionSpinner(position)
     }
 

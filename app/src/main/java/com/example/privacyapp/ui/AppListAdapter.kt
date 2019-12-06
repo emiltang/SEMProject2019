@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.privacyapp.R
 import kotlinx.android.synthetic.main.app_list_item.view.*
 
-
 class AppListAdapter(
     private val context: Context,
     private val list: List<ApplicationInfo>,
