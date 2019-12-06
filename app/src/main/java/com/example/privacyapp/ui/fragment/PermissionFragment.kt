@@ -25,7 +25,7 @@ class PermissionFragment : Fragment(R.layout.fragment_permission),
         list.adapter = PermissionViewAdapter(
             context = context!!,
             application = application,
-            permissions = perm.requestedPermissions,
+            permissions = perm.requestedPermissions ?: emptyArray(),
             listener = this
         )
     }
