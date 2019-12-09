@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var navController: NavController
-    private val tag = this::class.simpleName
 
     @Suppress("DEPRECATION")
     private fun askPermission() {

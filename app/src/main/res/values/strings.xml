@@ -3,20 +3,14 @@
     <string name="textview">TextView</string>
     <string name="start">Start</string>
     <string name="app_icon">App Icon</string>
-    <string name="title_activity_drawer_activity">DrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="view_permission">View Permission</string>
     <string name="open_settings">open settings</string>
-    <string name="date">Date</string>
-    <string name="permission">Permission</string>
-    <string name="app_title">App title</string>
-    <string name="app_title_hint">App Title</string>
     <string name="description">Description</string>
     <string name="send">send</string>
+    <string name="permissions">Permissions</string>
+    <string name="application_name">Application Name</string>
+    <string name="sync">Sync</string>
+    <string name="create_privacy_warning">Create Privacy Warning</string>
+    <string name="subtitle">Subtitle</string>
 </resources>

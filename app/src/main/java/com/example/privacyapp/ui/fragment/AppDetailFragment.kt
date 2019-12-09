@@ -24,6 +24,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
         return@lazy ViewModelProviders.of(this, factory)[AppViewModel::class.java]
     }
 
+    @Suppress("RemoveExplicitTypeArguments")
     private val application: ApplicationInfo by lazy {
         arguments!!.getParcelable<ApplicationInfo>("model") as ApplicationInfo
     }

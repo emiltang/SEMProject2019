@@ -1,5 +1,6 @@
 package com.example.privacyapp.service
 
+import android.annotation.SuppressLint
 import android.app.usage.NetworkStats
 import android.app.usage.NetworkStatsManager
 import android.content.Context
@@ -48,6 +49,7 @@ class NetworkUsageService : JobIntentService() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun getNetworkStatsForUidWifi(uid: Int) = try {
         networkStatsManager.queryDetailsForUid(
             TYPE_WIFI,
@@ -65,6 +67,8 @@ class NetworkUsageService : JobIntentService() {
      * Broken in android 10
      * https://stackoverflow.com/questions/55173823/i-am-getting-imei-null-in-android-q
      */
+    @Suppress("DEPRECATION")
+    @SuppressLint("HardwareIds")
     private fun getNetworkStatsForUidMobile(uid: Int) = try {
         networkStatsManager.queryDetailsForUid(
             TYPE_MOBILE,

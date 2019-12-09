@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
 import com.example.privacyapp.ui.AppListAdapter
-import kotlinx.android.synthetic.main.activity_list_activity.*
+import kotlinx.android.synthetic.main.fragment_app_list.*
 
 /**
  * Display list of installed apps
