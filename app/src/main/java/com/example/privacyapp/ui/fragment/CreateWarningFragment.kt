@@ -1,29 +1,27 @@
 package com.example.privacyapp.ui.fragment
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
+import android.content.pm.PackageManager.GET_PERMISSIONS
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.privacyapp.R
+import com.example.privacyapp.db.AppDatabase
+import com.example.privacyapp.model.PrivacyWarning
 import com.example.privacyapp.service.SyncWorker
 import com.example.privacyapp.service.UploadWorker
 import kotlinx.android.synthetic.main.fragment_create_warning.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), AdapterView.OnItemSelectedListener,
     View.OnClickListener {
 
     private lateinit var workManager: WorkManager
-
-    private var selectedApp: ApplicationInfo? = null
-
     private var appNamesList = emptyList<String>()
-    private var apps = emptyList<ApplicationInfo>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,15 +33,30 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         loadApplicationInfoToSpinner()
     }
 
-    private fun startUploadWorker() {
+    private fun startUploadWorker() = CoroutineScope(Dispatchers.IO).launch {
+        val warning = PrivacyWarning(
+            app = appTitleSpinner.selectedItem.toString(),
+            permission = appPermissionSpinner.selectedItem.toString(),
+            description = description.text.toString()
+        )
+        AppDatabase(context!!)
+            .privacyWarningDao()
+            .insertAll(warning)
         val data = Data.Builder()
-            .putString("app", selectedApp!!.packageName)
-            .putString("permission", appPermissionSpinner.selectedItem.toString())
-            .putString("description", description.text.toString())
+            .putString("id", warning.id.toString())
             .build()
-        val request = OneTimeWorkRequest.Builder(UploadWorker::class.java).setInputData(data).build()
+        /* Schedule upload on wifi and power */
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresCharging(true)
+            .build()
+        val request = OneTimeWorkRequest.Builder(UploadWorker::class.java)
+            .setInputData(data)
+            .setConstraints(constraints)
+            .build()
         workManager.enqueue(request)
     }
+
 
     override fun onClick(view: View) {
         when (view.id) {
@@ -58,8 +71,8 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     }
 
     private fun loadApplicationInfoToSpinner() {
-        apps = context!!.packageManager.getInstalledApplications(0)
-        appNamesList = apps.map { context!!.packageManager.getApplicationLabel(it).toString() }
+        val apps = context!!.packageManager.getInstalledApplications(0)
+        appNamesList = apps.map { it.packageName }
         val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, appNamesList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         appTitleSpinner.adapter = adapter
@@ -72,26 +85,19 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) =
         when (parent!!.id) {
             R.id.appTitleSpinner -> {
-                selectedApp = apps[position]
                 setAppPermissionSpinner(position)
-                println("item selected app")
             }
             R.id.appPermissionSpinner -> {
-                println("item selected permission")
             }
             else -> {
             }
         }
 
     private fun setAppPermissionSpinner(position: Int) {
-        val perm = context!!.packageManager.getPackageInfo(
-            apps[position].packageName,
-            PackageManager.GET_PERMISSIONS
-        )
-        val permissionList = perm.requestedPermissions ?: emptyArray()
-        val adapterPerm =
-            ArrayAdapter(context!!, android.R.layout.simple_list_item_1, permissionList)
-        adapterPerm.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        appPermissionSpinner.adapter = adapterPerm
+        val appInfo = context!!.packageManager.getPackageInfo(appNamesList[position], GET_PERMISSIONS)
+        val permissions = appInfo.requestedPermissions ?: emptyArray()
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, permissions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        appPermissionSpinner.adapter = adapter
     }
 }
