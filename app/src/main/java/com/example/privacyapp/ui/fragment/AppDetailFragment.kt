@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privacyapp.R
@@ -25,44 +24,46 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
         return@lazy ViewModelProviders.of(this, factory)[AppViewModel::class.java]
     }
 
-    private lateinit var application: ApplicationInfo
-    private lateinit var navController: NavController
-    private lateinit var adapter: NetworkViewAdapter
+    private val application: ApplicationInfo by lazy {
+        arguments!!.getParcelable<ApplicationInfo>("model") as ApplicationInfo
+    }
+
+    private val navController by lazy { findNavController() }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController = findNavController()
-
-        application = arguments!!.getParcelable("model") ?: return
-
         viewModel.warnings.observe(this, Observer { list ->
-            list.filter { it.app == application.packageName.toString() }.forEach { warningLabel.append(it.description) }
+            list.filter { it.app == application.packageName.toString() }
+                .forEach { warningLabel.append(it.description) }
         })
 
         appIcon.setImageDrawable(application.loadIcon(context!!.packageManager))
         description.text = context!!.packageManager.getApplicationLabel(application)
+
         permissionButton.setOnClickListener(this)
         openPermSettingsButton.setOnClickListener(this)
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
-        adapter = NetworkViewAdapter(context!!).also { recyclerView.adapter = it }
+        val adapter = NetworkViewAdapter(context!!).also { recyclerView.adapter = it }
         viewModel.netData.observe(this, Observer { adapter.list = it })
     }
 
     override fun onClick(v: View?) = when (v!!.id) {
-        R.id.openPermSettingsButton -> {
-            val myAppSettings = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse(application.packageName))
-            startActivity(myAppSettings.apply {
-                action = ACTION_APPLICATION_DETAILS_SETTINGS
-                data = Uri.fromParts("package", application.packageName, null)
-            })
-        }
-        R.id.permissionButton -> navController.navigate(
-            R.id.action_networkUsageFragment_to_permissionFragment,
-            bundleOf("application" to application)
-        )
+        R.id.openPermSettingsButton -> openAppSettings()
+        R.id.permissionButton -> navigateDetail()
         else -> Unit
-
     }
+
+    private fun openAppSettings() = with(Intent()) {
+        action = ACTION_APPLICATION_DETAILS_SETTINGS
+        data = Uri.fromParts("package", application.packageName, null)
+        startActivity(this)
+    }
+
+    private fun navigateDetail() = navController.navigate(
+        R.id.action_networkUsageFragment_to_permissionFragment,
+        bundleOf("application" to application)
+    )
 }
