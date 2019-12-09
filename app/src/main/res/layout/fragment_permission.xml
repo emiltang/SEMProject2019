@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
     android:name="com.example.privacyapp.ui.PermissionFragment"
@@ -9,4 +8,4 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     tools:context=".ui.fragment.PermissionFragment"
-    tools:listitem="@layout/permission_list_item"/>
+    tools:listitem="@layout/permission_list_item" />
