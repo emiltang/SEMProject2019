@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.CreateWarningFragment">
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/appTitleSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -17,9 +17,10 @@
         android:text="@string/application_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Widget.AppCompat.Spinner.Underlined" />
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/appPermissionSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -29,7 +30,8 @@
         android:text="@string/permissions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appTitleSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/appTitleSpinner"
+        style="@style/Widget.AppCompat.Spinner.Underlined" />
 
     <EditText
         android:id="@+id/description"
