@@ -14,4 +14,5 @@
     <string name="create_privacy_warning">Create Privacy Warning</string>
     <string name="subtitle">Subtitle</string>
     <string name="enhanced_privacy_management">Enhanced Privacy Management</string>
+    <string name="see_all_warnings">See All Warnings</string>
 </resources>

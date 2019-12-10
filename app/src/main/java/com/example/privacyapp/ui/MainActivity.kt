@@ -8,16 +8,16 @@ import android.os.Bundle
 import android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.privacyapp.R
+import com.example.privacyapp.WarningListFragment
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var navController: NavController
+    private val navController by lazy { findNavController(R.id.nav_host_fragment) }
 
     @Suppress("DEPRECATION")
     private fun askPermission() {
@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         askPermission()
         /* Setup toolbar and drawer */
-        navController = findNavController(R.id.nav_host_fragment)
 
         toolbar.setupWithNavController(navController, drawer_layout)
         nav_view.setupWithNavController(navController)
@@ -47,7 +46,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.warning -> navController.navigate(R.id.createWarningFragment)
+            R.id.warningList -> navController.navigate(
+                R.id.warningListFragment, Bundle().apply {
+                    putSerializable(WarningListFragment.ARG_VIEW_TYPE, WarningListFragment.Arguments.ALL_APPS)
+                })
         }
         return true
+
     }
 }

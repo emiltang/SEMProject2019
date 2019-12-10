@@ -3,5 +3,8 @@
     <item
         android:id="@+id/warning"
         android:title="@string/create_privacy_warning" />
+    <item
+        android:id="@+id/warningList"
+        android:title="@string/see_all_warnings" />
     <item android:title="@string/action_settings" />
 </menu>

@@ -16,7 +16,7 @@ import com.example.privacyapp.ui.AppResultReceiver
 class AppViewModel(
     application: Application,
     private val applicationInfo: ApplicationInfo
-) : AndroidViewModel(application), AppResultReceiver.AppReceiver {
+) : AndroidViewModel(application), AppResultReceiver.AppReceiver, IWarningViewModel {
 
     private val tag = this::class.simpleName
     private val db by lazy { AppDatabase(getApplication()) }
@@ -24,7 +24,7 @@ class AppViewModel(
     val netData: MutableLiveData<List<NetworkActivityRecord>> get() = _netData
     private val _netData by lazy { MutableLiveData<List<NetworkActivityRecord>>().also { requestNetData() } }
 
-    val warnings by lazy { db.privacyWarningDao().findByAppName(applicationInfo.packageName) }
+    override val warnings by lazy { db.privacyWarningDao().findByAppName(applicationInfo.packageName) }
 
     private fun requestNetData() {
         val intent = Intent(getApplication(), NetworkUsageService::class.java).apply {
@@ -42,7 +42,7 @@ class AppViewModel(
     class NetworkStatsViewModelFactory(
         private val application: Application,
         private val applicationInfo: ApplicationInfo
-    ) : ViewModelProvider.NewInstanceFactory() {
+    ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>) = AppViewModel(application, applicationInfo) as T
     }
