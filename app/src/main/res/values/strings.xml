@@ -13,4 +13,5 @@
     <string name="sync">Sync</string>
     <string name="create_privacy_warning">Create Privacy Warning</string>
     <string name="subtitle">Subtitle</string>
+    <string name="enhanced_privacy_management">Enhanced Privacy Management</string>
 </resources>

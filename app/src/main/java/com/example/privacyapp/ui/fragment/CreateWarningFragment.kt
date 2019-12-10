@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), AdapterView.OnItemSelectedListener,
     View.OnClickListener {
 
-    private lateinit var workManager: WorkManager
-    private var appNamesList = emptyList<String>()
+    private val workManager by lazy { WorkManager.getInstance(context!!) }
+    private val apps by lazy { context!!.packageManager.getInstalledApplications(0) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,7 +29,6 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         appPermissionSpinner.onItemSelectedListener = this
         sendButton.setOnClickListener(this)
         syncButton.setOnClickListener(this)
-        workManager = WorkManager.getInstance(context!!)
         loadApplicationInfoToSpinner()
     }
 
@@ -71,8 +70,7 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     }
 
     private fun loadApplicationInfoToSpinner() {
-        val apps = context!!.packageManager.getInstalledApplications(0)
-        appNamesList = apps.map { it.packageName }
+        val appNamesList = apps.map { it.packageName }
         val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, appNamesList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         appTitleSpinner.adapter = adapter
@@ -82,19 +80,14 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) =
-        when (parent!!.id) {
-            R.id.appTitleSpinner -> {
-                setAppPermissionSpinner(position)
-            }
-            R.id.appPermissionSpinner -> {
-            }
-            else -> {
-            }
-        }
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) = when (parent?.id) {
+        R.id.appTitleSpinner -> setAppPermissionSpinner(position)
+        R.id.appPermissionSpinner -> Unit
+        else -> Unit
+    }
 
     private fun setAppPermissionSpinner(position: Int) {
-        val appInfo = context!!.packageManager.getPackageInfo(appNamesList[position], GET_PERMISSIONS)
+        val appInfo = context!!.packageManager.getPackageInfo(apps[position].packageName, GET_PERMISSIONS)
         val permissions = appInfo.requestedPermissions ?: emptyArray()
         val adapter = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, permissions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
