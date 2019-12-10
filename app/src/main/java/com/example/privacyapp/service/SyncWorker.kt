@@ -15,19 +15,22 @@ import okhttp3.Request
 
 class SyncWorker(context: Context, workerParameters: WorkerParameters) : CoroutineWorker(context, workerParameters) {
 
-    private val tag: String = this::class.simpleName.toString()
-    private val http = OkHttpClient()
-    private val mapper = ObjectMapper()
+    private val tag = this::class.simpleName
+    private val http by lazy { OkHttpClient() }
+    private val mapper by lazy { ObjectMapper() }
+    private val db by lazy { AppDatabase(context = applicationContext) }
 
     override suspend fun doWork() = withContext(Dispatchers.IO) {
         try {
-            val request = Request.Builder().url(URL).get().build()
-            val result: String = http.newCall(request = request).execute().use {
-                return@use it.body!!.string()
-            }
+            val request = Request.Builder()
+                .url(URL)
+                .get()
+                .build()
+            val result = http.newCall(request = request)
+                .execute()
+                .use { it.body!!.string() }
             val list = mapper.readValue(result, object : TypeReference<List<PrivacyWarning>>() {})
-            val dao = AppDatabase(context = applicationContext).privacyWarningDao()
-            dao.insertAll(list)
+            db.privacyWarningDao().insertAll(list)
             Result.success()
         } catch (ex: Exception) {
             Log.d(tag, "Http get error", ex)

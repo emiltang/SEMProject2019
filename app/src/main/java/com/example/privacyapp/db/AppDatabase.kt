@@ -20,12 +20,12 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        private var instance: AppDatabase? = null
+        private var _instance: AppDatabase? = null
 
         /**
          * Database singleton getter
          */
-        operator fun invoke(context: Context) = instance ?: buildDatabase(context).also { instance = it }
+        operator fun invoke(context: Context) = _instance ?: buildDatabase(context).also { _instance = it }
 
         /**
          * Build in memory database

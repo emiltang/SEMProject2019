@@ -36,8 +36,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.warnings.observe(this, Observer { list ->
-            list.filter { it.app == application.packageName.toString() }
-                .forEach { warningLabel.append(it.description) }
+            list.forEach { warningLabel.append("${it.description}\n") }
         })
 
         appIcon.setImageDrawable(application.loadIcon(context!!.packageManager))

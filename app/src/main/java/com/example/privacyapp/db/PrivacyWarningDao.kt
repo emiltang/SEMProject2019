@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.privacyapp.model.PrivacyWarning
+import java.util.*
 
 @Dao
 interface PrivacyWarningDao {
@@ -19,8 +20,11 @@ interface PrivacyWarningDao {
     @Query("SELECT * FROM warning")
     fun getAll(): LiveData<List<PrivacyWarning>>
 
-    @Query("SELECT * FROM warning")
-    fun findById(): List<PrivacyWarning>
+    @Query("SELECT * FROM warning WHERE id = :id")
+    suspend fun findById(id: UUID): List<PrivacyWarning>
+
+    @Query("SELECT * FROM warning WHERE app = :name")
+    fun findByAppName(name: String): LiveData<List<PrivacyWarning>>
 
     @Query("SELECT * FROM warning ")
     fun selectAll(): Cursor

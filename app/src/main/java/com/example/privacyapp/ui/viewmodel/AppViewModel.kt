@@ -4,11 +4,12 @@ import android.app.Application
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.privacyapp.db.AppDatabase
 import com.example.privacyapp.model.NetworkActivityRecord
-import com.example.privacyapp.model.PrivacyWarning
 import com.example.privacyapp.service.NetworkUsageService
 import com.example.privacyapp.ui.AppResultReceiver
 
@@ -18,33 +19,24 @@ class AppViewModel(
 ) : AndroidViewModel(application), AppResultReceiver.AppReceiver {
 
     private val tag = this::class.simpleName
+    private val db by lazy { AppDatabase(getApplication()) }
 
     val netData: MutableLiveData<List<NetworkActivityRecord>> get() = _netData
-    val warnings: LiveData<List<PrivacyWarning>> = AppDatabase(this.getApplication()).privacyWarningDao().getAll()
+    private val _netData by lazy { MutableLiveData<List<NetworkActivityRecord>>().also { requestNetData() } }
 
-    private val _netData: MutableLiveData<List<NetworkActivityRecord>> by lazy {
-        MutableLiveData<List<NetworkActivityRecord>>().also {
-            load()
-        }
-    }
+    val warnings by lazy { db.privacyWarningDao().findByAppName(applicationInfo.packageName) }
 
-    private fun load() {
+    private fun requestNetData() {
         val intent = Intent(getApplication(), NetworkUsageService::class.java).apply {
-            putExtra(
-                "resultReceiver",
-                AppResultReceiver(listener = this@AppViewModel)
-            )
+            putExtra("resultReceiver", AppResultReceiver(this@AppViewModel))
             putExtra("uid", applicationInfo.uid)
         }
         NetworkUsageService.enqueueWork(getApplication(), intent)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onReceiveResult(resultCode: Int, bundle: Bundle) {
-        try {
-            _netData.value = bundle.get("data") as ArrayList<NetworkActivityRecord>
-        } catch (ex: ClassCastException) {
-            Log.e(tag, "Wrong bundle type for 'data'", ex)
-        }
+        _netData.value = bundle.get("data") as ArrayList<NetworkActivityRecord>
     }
 
     class NetworkStatsViewModelFactory(
@@ -52,9 +44,6 @@ class AppViewModel(
         private val applicationInfo: ApplicationInfo
     ) : ViewModelProvider.NewInstanceFactory() {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>) = AppViewModel(
-            application,
-            applicationInfo
-        ) as T
+        override fun <T : ViewModel> create(modelClass: Class<T>) = AppViewModel(application, applicationInfo) as T
     }
 }
