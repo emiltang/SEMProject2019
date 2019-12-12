@@ -3,18 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
+    android:label="Root"
     app:startDestination="@id/appListFragment">
-
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.privacyapp.ui.fragment.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
 
     <fragment
         android:id="@+id/appListFragment"
         android:name="com.example.privacyapp.ui.fragment.AppListFragment"
-        android:label="fragment_app_list"
+        android:label="App List"
         tools:layout="@layout/fragment_app_list">
         <action
             android:id="@+id/action_appListFragment_to_networkUsageFragment"
@@ -24,7 +19,7 @@
     <fragment
         android:id="@+id/networkUsageFragment"
         android:name="com.example.privacyapp.ui.fragment.AppDetailFragment"
-        android:label="fragment_network_usage"
+        android:label="Network Usage"
         tools:layout="@layout/fragment_app_detail">
         <action
             android:id="@+id/action_networkUsageFragment_to_permissionFragment"
@@ -34,22 +29,22 @@
     <fragment
         android:id="@+id/permissionFragment"
         android:name="com.example.privacyapp.ui.fragment.PermissionFragment"
-        android:label="fragment_permission_list"
+        android:label="Permission"
         tools:layout="@layout/fragment_permission" />
 
     <fragment
         android:id="@+id/createWarningFragment"
         android:name="com.example.privacyapp.ui.fragment.CreateWarningFragment"
-        android:label="fragment_create_warning"
+        android:label="Report App"
         tools:layout="@layout/fragment_create_warning" />
     <fragment
         android:id="@+id/warningListFragment"
         android:name="com.example.privacyapp.WarningListFragment"
-        android:label="fragment_warninglist_list"
+        android:label="Privacy Warnings"
         tools:layout="@layout/fragment_warninglist_list" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.privacyapp.ui.fragment.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="Settings" />
 
 </navigation>
