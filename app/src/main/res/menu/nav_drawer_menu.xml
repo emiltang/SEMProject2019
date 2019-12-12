@@ -6,5 +6,7 @@
     <item
         android:id="@+id/warningList"
         android:title="@string/see_all_warnings" />
-    <item android:title="@string/action_settings" />
+    <item
+        android:id="@+id/settings"
+        android:title="@string/action_settings" />
 </menu>

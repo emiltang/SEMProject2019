@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.privacyapp.R
@@ -46,12 +47,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.warning -> navController.navigate(R.id.createWarningFragment)
-            R.id.warningList -> navController.navigate(
-                R.id.warningListFragment, Bundle().apply {
-                    putSerializable(WarningListFragment.ARG_VIEW_TYPE, WarningListFragment.Arguments.ALL_APPS)
-                })
+            R.id.warningList -> navigateWarningList()
+            R.id.settings -> navController.navigate(R.id.settingsFragment)
         }
         return true
-
     }
+
+    private fun navigateWarningList() = navController.navigate(
+        R.id.warningListFragment,
+        bundleOf(WarningListFragment.ARG_VIEW_TYPE to WarningListFragment.Arguments.ALL_APPS)
+    )
 }

@@ -47,5 +47,9 @@
         android:name="com.example.privacyapp.WarningListFragment"
         android:label="fragment_warninglist_list"
         tools:layout="@layout/fragment_warninglist_list" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.privacyapp.ui.fragment.SettingsFragment"
+        android:label="SettingsFragment" />
 
 </navigation>

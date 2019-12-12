@@ -10,7 +10,6 @@ import androidx.work.*
 import com.example.privacyapp.R
 import com.example.privacyapp.db.AppDatabase
 import com.example.privacyapp.model.PrivacyWarning
-import com.example.privacyapp.service.SyncWorker
 import com.example.privacyapp.service.UploadWorker
 import kotlinx.android.synthetic.main.fragment_create_warning.*
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +27,6 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         appTitleSpinner.onItemSelectedListener = this
         appPermissionSpinner.onItemSelectedListener = this
         sendButton.setOnClickListener(this)
-        syncButton.setOnClickListener(this)
         loadApplicationInfoToSpinner()
     }
 
@@ -60,14 +58,9 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
     override fun onClick(view: View) {
         when (view.id) {
             R.id.sendButton -> startUploadWorker()
-            R.id.syncButton -> startSyncWorker()
         }
     }
 
-    private fun startSyncWorker() {
-        val request = OneTimeWorkRequest.from(SyncWorker::class.java)
-        workManager.enqueue(request)
-    }
 
     private fun loadApplicationInfoToSpinner() {
         val appNamesList = apps.map { it.packageName }
@@ -80,7 +73,12 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) = when (parent?.id) {
+    override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+    ) = when (parent?.id) {
         R.id.appTitleSpinner -> setAppPermissionSpinner(position)
         R.id.appPermissionSpinner -> Unit
         else -> Unit
