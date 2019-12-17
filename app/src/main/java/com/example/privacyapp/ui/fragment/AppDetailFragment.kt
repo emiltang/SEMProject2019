@@ -35,7 +35,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.warnings.observe(this, Observer { list ->
+        viewModel.warnings.observe(viewLifecycleOwner, Observer { list ->
             list.forEach { warningLabel.append("${it.description}\n") }
         })
 
@@ -47,7 +47,7 @@ class AppDetailFragment : Fragment(R.layout.fragment_app_detail), View.OnClickLi
 
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         val adapter = NetworkViewAdapter(context!!).also { recyclerView.adapter = it }
-        viewModel.netData.observe(this, Observer { adapter.list = it })
+        viewModel.netData.observe(viewLifecycleOwner, Observer { adapter.list = it })
     }
 
     override fun onClick(v: View?) = when (v!!.id) {

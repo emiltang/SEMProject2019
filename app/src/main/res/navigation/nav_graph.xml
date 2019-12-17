@@ -37,11 +37,13 @@
         android:name="com.example.privacyapp.ui.fragment.CreateWarningFragment"
         android:label="Report App"
         tools:layout="@layout/fragment_create_warning" />
+
     <fragment
         android:id="@+id/warningListFragment"
         android:name="com.example.privacyapp.WarningListFragment"
         android:label="Privacy Warnings"
         tools:layout="@layout/fragment_warninglist_list" />
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.privacyapp.ui.fragment.SettingsFragment"

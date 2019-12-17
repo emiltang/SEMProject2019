@@ -12,7 +12,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.*
 
 class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
@@ -23,7 +22,7 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
-            val id = UUID.fromString(inputData.getString("id"))
+            val id = inputData.getLong("id", -1)
             val warning = db.privacyWarningDao()
                 .findById(id)
             val json = mapper.writeValueAsString(warning)
@@ -38,7 +37,9 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
             if (result.isSuccessful) {
                 Result.success()
             } else {
-                Log.e(tag, "body: ${result.body!!.string()} msg: ${result.message} code: ${result.code}")
+                Log.e(tag, "Error detected")
+
+                //    Log.e(tag, "body: ${result.body!!.string()} msg: ${result.message} code: ${result.code}")
                 Result.failure()
             }
         } catch (ex: Exception) {

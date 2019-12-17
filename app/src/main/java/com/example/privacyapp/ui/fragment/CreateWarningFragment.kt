@@ -21,6 +21,8 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
 
     private val workManager by lazy { WorkManager.getInstance(context!!) }
     private val apps by lazy { context!!.packageManager.getInstalledApplications(0) }
+    private val db by lazy { AppDatabase(context!!) }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,11 +38,11 @@ class CreateWarningFragment : Fragment(R.layout.fragment_create_warning), Adapte
             permission = appPermissionSpinner.selectedItem.toString(),
             description = description.text.toString()
         )
-        AppDatabase(context!!)
-            .privacyWarningDao()
-            .insertAll(warning)
+
+        val id = db.privacyWarningDao()
+            .insert(warning)
         val data = Data.Builder()
-            .putString("id", warning.id.toString())
+            .putLong("id", id)
             .build()
         /* Schedule upload on wifi and power */
         val constraints = Constraints.Builder()
